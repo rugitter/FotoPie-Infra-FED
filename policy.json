@@ -6,7 +6,7 @@
             "Effect": "Allow",
             "Principal": "*",
             "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::fotopie-tf.ccdemo.link/*"
+            "Resource": "arn:aws:s3:::uat.fotopie.net/*"
         }
     ]
 }

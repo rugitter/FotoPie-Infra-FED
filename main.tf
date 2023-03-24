@@ -14,7 +14,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "main_bucket" {
-  bucket = "fotopie-tf.ccdemo.link"
+  bucket = var.domain_name_dev
   acl    = "public-read"
   policy = file("policy.json")
 }
@@ -31,14 +31,14 @@ resource "aws_s3_bucket_website_configuration" "config" {
 }
 
 resource "aws_s3_bucket" "log_bucket" {
-  bucket = "logs.fotopie-tf.ccdemo.link"
+  bucket = "log.${var.domain_name_dev}"
 }
 
-resource "aws_s3_object" "log_folder" {
-    bucket = aws_s3_bucket.log_bucket.id
-    key    = "logs/"
-    source = "/dev/null"
-}
+# resource "aws_s3_object" "log_folder" {
+#     bucket = aws_s3_bucket.log_bucket.id
+#     key    = "logs/"
+#     source = "/dev/null"
+# }
 
 resource "aws_s3_bucket_acl" "log_bucket_acl" {
   bucket = aws_s3_bucket.log_bucket.id

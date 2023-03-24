@@ -1,7 +1,7 @@
 variable "domain_name_dev" {
-  description = "My Dev Domain Name"
+  description = "FotoPie UAT Domain Name"
   type        = string
-  default     = "fotopie.net"
+  default     = "uat.fotopie.net"
 }
 
 
