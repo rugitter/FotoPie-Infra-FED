@@ -7,12 +7,21 @@ terraform {
   }
 
   required_version = ">= 1.2.0"
+
+  backend "s3" {
+    encrypt              = true
+    bucket               = "fotopie-tfstate"
+    region               = "ap-southeast-2"
+    key                  = "fotopie-fe.tfstate"
+  }
 }
+
 
 provider "aws" {
   region = "ap-southeast-2"
 }
 
+# S3 - hosting static website
 resource "aws_s3_bucket" "main_bucket" {
   bucket = var.domain_name_dev
   acl    = "public-read"
@@ -34,12 +43,6 @@ resource "aws_s3_bucket" "log_bucket" {
   bucket = "log.${var.domain_name_dev}"
 }
 
-# resource "aws_s3_object" "log_folder" {
-#     bucket = aws_s3_bucket.log_bucket.id
-#     key    = "logs/"
-#     source = "/dev/null"
-# }
-
 resource "aws_s3_bucket_acl" "log_bucket_acl" {
   bucket = aws_s3_bucket.log_bucket.id
   acl    = "log-delivery-write"
@@ -50,4 +53,23 @@ resource "aws_s3_bucket_logging" "logging" {
 
   target_bucket = aws_s3_bucket.log_bucket.id
   target_prefix = "logs/"
+}
+
+# Networking
+# Hosted zone and DNS records
+resource "aws_route53_zone" "fotopie_zone" {
+  name = var.domain_name_dev
+}
+
+resource "aws_route53_record" "fotopie_net" {
+  zone_id = aws_route53_zone.fotopie_zone.id
+  name    = var.domain_name_dev
+  type    = "A"
+
+  alias {
+    name    = "s3-website-ap-southeast-2.amazonaws.com"
+    # mapping "ap-southeast-2": "Z1WCIGYICN2BYD",
+    zone_id = "Z1WCIGYICN2BYD"
+    evaluate_target_health = false
+  }
 }

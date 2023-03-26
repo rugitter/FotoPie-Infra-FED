@@ -8,6 +8,5 @@ variable "s3_arn_uat" {
   description = "FotoPie UAT S3 Arn"
   type        = string
   default     = "arn:aws:s3:::uat.fotopie.net/*"
-
 }
 
