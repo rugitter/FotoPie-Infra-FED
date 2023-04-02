@@ -1,26 +1,11 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.16"
-    }
-  }
-
-  required_version = ">= 1.2.0"
-}
-
-provider "aws" {
-  region = "ap-southeast-2"
-}
-
-# Hosted zone and DNS records
+# Networking - Hosted zone and DNS records
 resource "aws_route53_zone" "fotopie_zone" {
-  name = var.domain_name_dev
+  name = var.domain_name
 }
 
 resource "aws_route53_record" "fotopie_net" {
   zone_id = aws_route53_zone.fotopie_zone.id
-  name    = var.domain_name_dev
+  name    = var.domain_name
   type    = "A"
 
   alias {
