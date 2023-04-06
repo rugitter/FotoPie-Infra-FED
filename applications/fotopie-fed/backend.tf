@@ -10,7 +10,7 @@ terraform {
 
   backend "s3" {
     encrypt              = true
-    bucket               = var.my_tfstate_bucket
+    bucket               = "ccdemo-fotopie-tfstate"
     region               = "ap-southeast-2"
     key                  = "fotopie-fe.tfstate"
   }
