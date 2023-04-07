@@ -9,15 +9,16 @@ terraform {
   required_version = ">= 1.2.0"
 
   backend "s3" {
+    profile              = "fotopie-uat"
     encrypt              = true
-    bucket               = var.my_tfstate_bucket
+    bucket               = "fotopie-statefile-fed"
     region               = "ap-southeast-2"
-    key                  = "fotopie-fe.tfstate"
+    key                  = "fotopie-fed.tfstate"
   }
 }
 
 
 provider "aws" {
-  profile = "default"
+  profile = "fotopie-uat"
   region  = "ap-southeast-2"
 }
