@@ -8,6 +8,7 @@ terraform {
 
   required_version = ">= 1.2.0"
 
+  # Change the values here to your own backend
   backend "s3" {
     profile              = "fotopie-uat"
     encrypt              = true
