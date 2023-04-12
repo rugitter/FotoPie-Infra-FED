@@ -26,3 +26,11 @@ variable "alb_tg_arn" {
 variable "task_desired_count" {
   type          = number
 }
+
+variable "tf_container_port" {
+  type          = number
+}
+
+variable "ecr_uri" {
+  type          = string
+}

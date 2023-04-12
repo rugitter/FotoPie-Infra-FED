@@ -49,6 +49,7 @@ resource "aws_subnet" "private_1" {
 #   }
 # }
 
+# Create NAT Gateway with an associated Elastic IP
 resource "aws_eip" "eip_1" {
   vpc = true
 
@@ -65,6 +66,24 @@ resource "aws_nat_gateway" "nat_1" {
     Name = "${var.application_name}-nat-gateway-1"
   }
 }
+
+# # NAT Gateway #2
+# resource "aws_eip" "nat_2" {
+#   vpc = true
+
+#   tags = {
+#     Name = "terraform-nat-eip-2"
+#   }
+# }
+
+# resource "aws_nat_gateway" "nat_2" {
+#   allocation_id = aws_eip.nat_2.id
+#   subnet_id     = aws_subnet.public_2.id
+
+#   tags = {
+#     Name = "terraform-nat-gateway-2"
+#   }
+# }
 
 # Create internet gateway attached in vpc
 resource "aws_internet_gateway" "igw" {
@@ -111,8 +130,22 @@ resource "aws_route_table_association" "private_1" {
   route_table_id = aws_route_table.private_1.id
 }
 
+# # Create private Route Tables 2 and route to nat gateway 2
+# resource "aws_route_table" "private_2" {
+#   vpc_id = aws_vpc.main.id
 
+#    route {
+#       cidr_block = "0.0.0.0/0"
+#       nat_gateway_id = aws_nat_gateway.nat_2.id
+#   }
 
+#     tags = {
+#       Name = "terraform-private-2-routetable"
+#    }
+# }
 
-
-
+# # Associate private route 2 table with private subnet 2
+# resource "aws_route_table_association" "private_2" {
+#   subnet_id = aws_subnet.private_2.id
+#   route_table_id = aws_route_table.private_2.id
+# }

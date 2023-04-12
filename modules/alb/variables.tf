@@ -19,3 +19,6 @@ variable "tg_port" {
   type          = number          
 }
 
+variable "tg_healthcheck" {
+  type          = string
+}

@@ -9,10 +9,3 @@ module "fed-route53" {
 
   domain_name = var.my_domain_name
 }
-
-module "fotopie-fed-vpc" {
-  source = "../../modules/vpc"
-
-  application_name = var.application_name
-}
-

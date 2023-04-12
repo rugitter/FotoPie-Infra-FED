@@ -11,7 +11,8 @@ module "fotopie-bed-alb" {
   vpc_id            = module.fotopie-bed-vpc.vpc_id
   public1_id        = module.fotopie-bed-vpc.public1_id
   public2_id        = module.fotopie-bed-vpc.public2_id
-  tg_port           = 80
+  tg_port           = 3000
+  tg_healthcheck    = "/api/user"
 }
 
 module "fotopie-bed-ecs" {

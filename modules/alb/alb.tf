@@ -13,6 +13,14 @@ resource "aws_security_group" "lb_sg" {
     description = "Allow all HTTP 80 traffic to alb"
   }
 
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all HTTP 80 traffic to alb"
+  }
+
   egress {
     from_port = 0
     to_port   = 0
@@ -53,7 +61,7 @@ resource "aws_lb_target_group" "ecs_tg" {
   health_check {
     healthy_threshold   = 2
     interval            = 30
-    path                = "/api/user"
+    path                = var.tg_healthcheck
     port                = "traffic-port"
     protocol            = "HTTP"
     timeout             = 5
