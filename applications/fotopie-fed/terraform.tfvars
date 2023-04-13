@@ -2,7 +2,7 @@
 
 my_domain_name      = "uat.fotopie.net"
 
-application_name    = "fotopie-fed"
+application_name    = "fotopie-fed-uat"
 
 task_desired_count  = 2
 

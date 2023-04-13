@@ -18,7 +18,7 @@ resource "aws_security_group" "lb_sg" {
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow all HTTP 80 traffic to alb"
+    description = "Allow all HTTPS 443 traffic to alb"
   }
 
   egress {

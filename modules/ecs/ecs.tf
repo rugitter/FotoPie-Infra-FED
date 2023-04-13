@@ -23,7 +23,7 @@ resource "aws_security_group" "ecs_service_sg" {
 }
 
 ### Prerequisite 2: IAM ECS Task Execution Role
-# Create ecsTaskExecutionRole Role at first time 
+# 1. Create ecsTaskExecutionRole Role at first time 
 # Move this role creation code to the iam module (not in use for now)
 # Create IAM ECS Task Execution Role at first time 
 resource "aws_iam_role" "ecs_task_execution_role" {
@@ -64,7 +64,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy_attach
   }
 
   resource "aws_cloudwatch_log_group" "fotopie_logs_group" {
-    name = "/ecs/fotopie"
+    name = "/ecs/${var.application_name}"
 
     tags = {
       Name = "fotopie-log-group"
@@ -78,13 +78,13 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy_attach
 
 # create task definition
   resource "aws_ecs_task_definition" "main" {
-    family                   = "fotopie"
+    family                   = "${var.application_name}"
     network_mode             = "awsvpc"
     requires_compatibilities = ["FARGATE"]
     cpu                      = "1024"
     memory                   = "2048"
 
-    # When first run, create ecs tast_execution_role
+    # 2. When first run, create ecs tast_execution_role
     execution_role_arn        = aws_iam_role.ecs_task_execution_role.arn
 
     # When tast_execution_role already created
@@ -100,8 +100,8 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy_attach
                 "logDriver": "awslogs",
                 "options": {
                     "awslogs-region" : "ap-southeast-2",
-                    "awslogs-group" : "/ecs/fotopie",
-                    "awslogs-stream-prefix" : "ecs"
+                    "awslogs-group" : "/ecs/${var.application_name}",
+                    "awslogs-stream-prefix" : "fotopie"
                   }
               }
         "portMappings": [
