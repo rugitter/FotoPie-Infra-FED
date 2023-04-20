@@ -15,3 +15,9 @@ variable "task_desired_count" {
   type        = number
   default     = 1
 }
+
+variable "ecr_uri"  {
+  description = "Specify the url for your ECR"
+  type        = string
+  default     = "ecr_uri"
+}

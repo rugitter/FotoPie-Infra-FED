@@ -14,7 +14,8 @@ terraform {
     encrypt              = true
     bucket               = "fotopie-statefile-fed"
     region               = "ap-southeast-2"
-    key                  = "fotopie-fed.tfstate"
+    key                  = "fotopie-fed.tfstate"        # uat statefile
+    # key                  = "fotopie-fed-prod.tfstate"   # prod statefile
   }
 }
 

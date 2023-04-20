@@ -20,7 +20,7 @@ module "fed-alb" {
   public1_id        = module.fed-vpc.public1_id
   public2_id        = module.fed-vpc.public2_id
   tg_port           = 3000          # 3000
-  tg_healthcheck    = "/api/user"
+  tg_healthcheck    = "/"
 }
 
 module "fed-ecr" {

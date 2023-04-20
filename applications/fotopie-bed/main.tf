@@ -20,6 +20,8 @@ module "fotopie-bed-ecs" {
 
   application_name  = var.application_name
   task_desired_count= var.task_desired_count
+  tf_container_port = 9090
+  ecr_uri           = var.ecr_uri
 
   vpc_id            = module.fotopie-bed-vpc.vpc_id
   private1_id       = module.fotopie-bed-vpc.private1_id
