@@ -1,0 +1,64 @@
+// My first pipeline for Fotopie FED - export static files to S3
+pipeline {
+    agent any
+    
+    stages {
+        stage('Git checkout') {
+            steps{
+                echo 'Git Checkout'
+                // Get source code from a GitHub repository
+                git branch: 'UAT', url: 'https://github.com/Go-Husky-FotoPie/FotoPie-Front-end.git'
+            }
+        }
+        
+        stage('Build') {
+            environment {
+                BACKEND_API=$BACKEND_API
+                Get_Synonyms_API_Prefix=$Get_Synonyms_API_Prefix
+            }
+            steps{
+                echo 'Build'
+                // Do your build task
+                sh 'pwd'
+                sh 'npm --version'
+                sh 'node --version'
+                sh 'npm install'
+                sh 'npm run build'
+            }
+        }
+        
+        stage('Export') {
+            steps{
+                // Do your export task
+                sh 'pwd'
+                sh 'npm run export'
+                sh 'ls -al'
+            }
+        }
+        
+        stage('Test') {
+            steps{
+                echo 'Test'
+                // sh 'npm run test'
+            }
+        }
+        
+        stage('Publish') {
+            steps{
+                echo 'Publish'
+                withAWS(credentials:'aws_fotopie', region:'ap-southeast-2') {
+                    s3Upload(file:'out/', bucket:'uat.fotopie.net')
+                }
+            }
+        }
+    }
+
+    post {
+        failure {
+            echo 'Processing failed'
+        }
+        success {
+            echo 'Processing succeeded'
+        }
+    }
+}
