@@ -1,0 +1,77 @@
+// My second (current) pipeline for Fotopie FED - Use Docker + ECR + ECS for FED
+pipeline {
+    agent any
+    
+    environment {
+        // from fed app .env
+        BACKEND_API=$BACKEND_API
+        Get_Synonyms_API_Prefix=$Get_Synonyms_API_Prefix
+        
+        // local var
+        ECR_REPO=$ECR_REPO_FED
+        ECR_LOGIN_URL=$ECR_LOGIN_URL
+    }
+    
+    stages {
+        stage('ECR Login') {
+            steps{
+                withAWS(credentials:'aws_csuchqwork', region:'ap-southeast-2') {
+                    sh 'aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin $ECR_LOGIN_URL'
+                }
+            }
+        }
+        
+        stage('Git checkout') {
+            steps{
+                // Get source code from a GitHub repository
+                git branch: 'UAT', url: 'https://github.com/rugitter/FotoPie-Front-end.git'
+            }
+        }
+        
+        stage('Build') {
+            steps{
+                echo 'Dockerize'
+                // Do your build task
+                sh 'pwd'
+                sh 'npm --version'
+                sh 'node --version'
+                
+                echo "BACKEND_API is ${BACKEND_API}"
+                sh 'printenv'
+                
+                echo "docker build --build-arg BACKEND_API=$BACKEND_API --build-arg Get_Synonyms_API_Prefix=$Get_Synonyms_API_Prefix -t $ECR_REPO:latest ."
+                sh 'docker build --build-arg BACKEND_API=$BACKEND_API --build-arg Get_Synonyms_API_Prefix=$Get_Synonyms_API_Prefix -t $ECR_REPO:latest .'
+            }
+        }
+        
+        // stage('Test') {
+        //     steps{
+        //         echo 'Test'
+        //         // Run unit tests, integration tests, and/or e2e tests
+        //         // sh 'npm run test'
+        //     }
+        // }
+        
+        stage('Publish') {
+            steps{
+                echo 'Publish'
+                sh 'docker push --all-tags $ECR_REPO'
+            }
+        }
+
+        stage('Update Service') {
+            steps{
+                echo 'Update ECS Service'
+            }
+        }
+    }
+
+    post {
+        failure {
+            echo 'Processing failed'
+        }
+        success {
+            echo 'Processing succeeded'
+        }
+    }
+}
