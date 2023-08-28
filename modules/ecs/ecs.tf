@@ -26,36 +26,36 @@ resource "aws_security_group" "ecs_service_sg" {
 # 1. Create ecsTaskExecutionRole Role at first time 
 # Move this role creation code to the iam module (not in use for now)
 # Create IAM ECS Task Execution Role at first time 
-resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecsTaskExecutionRole"
+# resource "aws_iam_role" "ecs_task_execution_role" {
+#   name = "ecsTaskExecutionRole"
  
-  assume_role_policy = <<EOF
-{
- "Version": "2012-10-17",
- "Statement": [
-   {
-     "Action": "sts:AssumeRole",
-     "Principal": {
-       "Service": "ecs-tasks.amazonaws.com"
-     },
-     "Effect": "Allow",
-     "Sid": ""
-   }
- ]
-}
-EOF
-}
+#   assume_role_policy = <<EOF
+# {
+#  "Version": "2012-10-17",
+#  "Statement": [
+#    {
+#      "Action": "sts:AssumeRole",
+#      "Principal": {
+#        "Service": "ecs-tasks.amazonaws.com"
+#      },
+#      "Effect": "Allow",
+#      "Sid": ""
+#    }
+#  ]
+# }
+# EOF
+# }
 
-# Attach the ECS task execution role policy to the ECS task execution role
-resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy_attachment" {
-   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-   role       = aws_iam_role.ecs_task_execution_role.name
-}
+# # Attach the ECS task execution role policy to the ECS task execution role
+# resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy_attachment" {
+#    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+#    role       = aws_iam_role.ecs_task_execution_role.name
+# }
 
 # Query ecsTaskExecutionRole role if already existing
-# data "aws_iam_role" "ecs_task_exec_role" {
-#   name = "ecsTaskExecutionRole"
-# }
+data "aws_iam_role" "ecs_task_exec_role" {
+  name = "ecsTaskExecutionRole"
+}
 
 
 ### Create ESC Cluster
@@ -85,15 +85,15 @@ resource "aws_ecs_task_definition" "main" {
   memory                   = "2048"
 
   # 2. When first run, create ecs tast_execution_role
-  execution_role_arn        = aws_iam_role.ecs_task_execution_role.arn
+  # execution_role_arn        = aws_iam_role.ecs_task_execution_role.arn
 
   # When tast_execution_role already created
-  # execution_role_arn = data.aws_iam_role.ecs_task_exec_role.arn
+  execution_role_arn = data.aws_iam_role.ecs_task_exec_role.arn
 
   container_definitions = jsonencode([
     {
       "name": var.application_name,
-      "image": "${var.ecr_uri}/${var.application_name}:latest",
+      "image": "${var.ecr_uri}:latest",
       "cpu":    1024,
       "memory": 2048,
       "logConfiguration": {

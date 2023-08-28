@@ -36,7 +36,7 @@ module "fed-ecs" {
   application_name  = var.application_name
   task_desired_count= var.task_desired_count
   tf_container_port = 3000
-  ecr_uri           = var.ecr_uri
+  ecr_uri           = module.fed-ecr.repo_url
 
   vpc_id            = module.fed-vpc.vpc_id
   private1_id       = module.fed-vpc.private1_id

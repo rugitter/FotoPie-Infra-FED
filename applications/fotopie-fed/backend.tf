@@ -10,9 +10,9 @@ terraform {
 
   # Change the values here to your own backend
   backend "s3" {
-    profile              = "fotopie-uat"
+    # profile              = "fotopie-uat"
     encrypt              = true
-    bucket               = "fotopie-statefile-fed"
+    bucket               = "ccdemo-fotopie-tfstate"
     region               = "ap-southeast-2"
     key                  = "fotopie-fed.tfstate"        # uat statefile
     # key                  = "fotopie-fed-prod.tfstate"   # prod statefile
@@ -21,6 +21,6 @@ terraform {
 
 
 provider "aws" {
-  profile = "fotopie-uat"
+  # profile = "fotopie-uat"
   region  = "ap-southeast-2"
 }
